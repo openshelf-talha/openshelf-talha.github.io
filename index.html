@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OpenShelf — Free Apps, No Catch</title>
+<style>
+  :root{
+    --bg:#0d1210;
+    --bg-panel:#141b18;
+    --line:#25322c;
+    --text:#e8ede9;
+    --muted:#8ba396;
+    --accent:#7CFF9B;
+    --accent-dim:#3f7a52;
+    --amber:#ffb454;
+    --mono: 'JetBrains Mono', 'Courier New', monospace;
+    --sans: 'Inter', -apple-system, sans-serif;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.5;
+  }
+  a{color:inherit; text-decoration:none;}
+
+  /* ---------- top bar ---------- */
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:18px 24px;
+    border-bottom:1px solid var(--line);
+    position:sticky; top:0; background:rgba(13,18,16,0.92);
+    backdrop-filter:blur(6px);
+    z-index:10;
+  }
+  .logo{
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:1.1rem;
+    letter-spacing:0.5px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .logo .dot{width:8px;height:8px;border-radius:50%;background:var(--accent); box-shadow:0 0 8px var(--accent);}
+  nav{display:flex; gap:22px; font-size:0.85rem; color:var(--muted);}
+  nav a:hover{color:var(--accent);}
+
+  /* ---------- hero ---------- */
+  .hero{
+    padding:64px 24px 40px;
+    max-width:880px;
+    margin:0 auto;
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:0.75rem;
+    color:var(--accent);
+    letter-spacing:2px;
+    text-transform:uppercase;
+    margin-bottom:14px;
+  }
+  h1{
+    font-size:clamp(2.1rem, 5vw, 3.2rem);
+    font-weight:800;
+    line-height:1.1;
+    letter-spacing:-0.5px;
+    margin-bottom:18px;
+  }
+  h1 span{color:var(--accent);}
+  .hero p{
+    color:var(--muted);
+    font-size:1.05rem;
+    max-width:560px;
+    margin-bottom:26px;
+  }
+  .search{
+    display:flex;
+    max-width:520px;
+    border:1px solid var(--line);
+    background:var(--bg-panel);
+    border-radius:10px;
+    overflow:hidden;
+  }
+  .search input{
+    flex:1;
+    background:transparent;
+    border:none;
+    outline:none;
+    color:var(--text);
+    padding:14px 16px;
+    font-family:var(--mono);
+    font-size:0.9rem;
+  }
+  .search button{
+    background:var(--accent);
+    color:#06120a;
+    border:none;
+    padding:0 20px;
+    font-weight:700;
+    font-family:var(--mono);
+    cursor:pointer;
+    font-size:0.85rem;
+  }
+
+  /* ---------- ad slot ---------- */
+  .ad-slot{
+    max-width:880px;
+    margin:0 auto 40px;
+    padding:14px 24px;
+  }
+  .ad-slot .ad-box{
+    border:1px dashed var(--line);
+    border-radius:10px;
+    padding:18px;
+    text-align:center;
+    color:var(--muted);
+    font-family:var(--mono);
+    font-size:0.75rem;
+    letter-spacing:1px;
+  }
+
+  /* ---------- category chips ---------- */
+  .chips{
+    max-width:880px;
+    margin:0 auto;
+    padding:0 24px 20px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  .chip{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    padding:7px 14px;
+    border:1px solid var(--line);
+    border-radius:999px;
+    color:var(--muted);
+    cursor:pointer;
+    transition:all .15s ease;
+  }
+  .chip.active, .chip:hover{
+    border-color:var(--accent-dim);
+    color:var(--accent);
+    background:rgba(124,255,155,0.06);
+  }
+
+  /* ---------- grid ---------- */
+  main{max-width:880px; margin:0 auto; padding:10px 24px 60px;}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+    gap:16px;
+  }
+  .card{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    transition:transform .15s ease, border-color .15s ease;
+  }
+  .card:hover{transform:translateY(-2px); border-color:var(--accent-dim);}
+  .card-top{display:flex; align-items:center; gap:12px;}
+  .icon{
+    width:44px; height:44px;
+    border-radius:11px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:var(--mono);
+    font-weight:700;
+    font-size:1rem;
+    color:#06120a;
+  }
+  .card-title{font-weight:700; font-size:1rem;}
+  .card-tag{font-family:var(--mono); font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px;}
+  .card p.desc{color:var(--muted); font-size:0.86rem; flex:1;}
+  .card-footer{
+    display:flex; align-items:center; justify-content:space-between;
+    margin-top:6px;
+    padding-top:12px;
+    border-top:1px solid var(--line);
+  }
+  .size{font-family:var(--mono); font-size:0.75rem; color:var(--muted);}
+  .dl-btn{
+    font-family:var(--mono);
+    font-size:0.78rem;
+    font-weight:700;
+    background:var(--accent);
+    color:#06120a;
+    padding:8px 14px;
+    border-radius:8px;
+    border:none;
+    cursor:pointer;
+  }
+  .dl-btn:hover{background:#8fffb0;}
+  .badge-free{
+    font-family:var(--mono);
+    font-size:0.65rem;
+    color:var(--accent);
+    border:1px solid var(--accent-dim);
+    padding:2px 8px;
+    border-radius:6px;
+  }
+
+  section.section-title{
+    max-width:880px; margin:0 auto; padding:30px 24px 0;
+    font-family:var(--mono); font-size:0.8rem; color:var(--muted);
+    text-transform:uppercase; letter-spacing:2px;
+  }
+
+  footer{
+    border-top:1px solid var(--line);
+    padding:30px 24px;
+    text-align:center;
+    color:var(--muted);
+    font-size:0.8rem;
+    font-family:var(--mono);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo"><span class="dot"></span> OpenShelf</div>
+  <nav>
+    <a href="#apps">Apps</a>
+    <a href="#about">About</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div class="eyebrow">100% free · no login · no cracks</div>
+  <h1>Free apps that are <span>actually free.</span></h1>
+  <p>Every app on this shelf is either free-and-legal or open-source — official download links only. No sketchy installers, no "pro unlocked" scams.</p>
+  <div class="search">
+    <input type="text" id="searchInput" placeholder="search an app... e.g. photo editor, notes, pdf">
+    <button onclick="filterApps()">Search</button>
+  </div>
+</div>
+
+<div class="ad-slot">
+  <!-- AD SLOT 1 — paste your AdSense / ad network code here -->
+  <div class="ad-box">AD SPACE — 728×90 or responsive banner</div>
+</div>
+
+<div class="chips" id="chips">
+  <div class="chip active" data-cat="all">All</div>
+  <div class="chip" data-cat="productivity">Productivity</div>
+  <div class="chip" data-cat="media">Media</div>
+  <div class="chip" data-cat="utility">Utility</div>
+  <div class="chip" data-cat="dev">Dev Tools</div>
+</div>
+
+<main id="apps">
+  <div class="grid" id="appGrid"></div>
+</main>
+
+<div class="ad-slot">
+  <!-- AD SLOT 2 -->
+  <div class="ad-box">AD SPACE — in-feed / native ad</div>
+</div>
+
+<footer id="about">
+  OpenShelf — a directory of free & open-source software. All apps link to their official source.<br>
+  Built by T LAB · 2026
+</footer>
+
+<script>
+// ---- Sample data. Replace / extend with real apps + official links. ----
+const apps = [
+  {name:"LibreOffice", cat:"productivity", tag:"Office Suite", desc:"Full office suite — docs, sheets, slides. 100% free, open-source, no ads.", size:"300 MB", color:"#7CFF9B", initial:"L", link:"https://www.libreoffice.org/download/download/"},
+  {name:"GIMP", cat:"media", tag:"Photo Editor", desc:"Powerful free alternative to Photoshop for photo editing and graphic design.", size:"280 MB", color:"#ffb454", initial:"G", link:"https://www.gimp.org/downloads/"},
+  {name:"VLC Media Player", cat:"media", tag:"Video Player", desc:"Plays almost any video/audio format. No ads, no tracking, fully free.", size:"40 MB", color:"#ff7a7a", initial:"V", link:"https://www.videolan.org/vlc/"},
+  {name:"OBS Studio", cat:"media", tag:"Screen Recorder", desc:"Free screen recording and live streaming software, used by creators worldwide.", size:"120 MB", color:"#7aa2ff", initial:"O", link:"https://obsproject.com/download"},
+  {name:"Notion (Free Plan)", cat:"productivity", tag:"Notes & Docs", desc:"Notes, docs, and task management with a generous free personal plan.", size:"Web/App", color:"#e8ede9", initial:"N", link:"https://www.notion.so/desktop"},
+  {name:"7-Zip", cat:"utility", tag:"File Archiver", desc:"Open-source file compression tool — zip, unzip, extract any archive format.", size:"1.5 MB", color:"#c37aff", initial:"7", link:"https://www.7-zip.org/"},
+  {name:"Visual Studio Code", cat:"dev", tag:"Code Editor", desc:"Free, official code editor from Microsoft. Extensions for every language.", size:"90 MB", color:"#7ac9ff", initial:"<>", link:"https://code.visualstudio.com/download"},
+  {name:"Audacity", cat:"media", tag:"Audio Editor", desc:"Free, open-source audio recording and editing software.", size:"40 MB", color:"#ffd27a", initial:"A", link:"https://www.audacityteam.org/download/"},
+  {name:"CapCut", cat:"media", tag:"Video Editor", desc:"Free video editing app for short-form content — the one T LAB uses.", size:"200 MB", color:"#7CFF9B", initial:"C", link:"https://www.capcut.com/"},
+];
+
+const grid = document.getElementById('appGrid');
+
+function render(list){
+  grid.innerHTML = "";
+  list.forEach(app => {
+    const card = document.createElement('div');
+    card.className = "card";
+    card.innerHTML = `
+      <div class="card-top">
+        <div class="icon" style="background:${app.color}">${app.initial}</div>
+        <div>
+          <div class="card-title">${app.name}</div>
+          <div class="card-tag">${app.tag}</div>
+        </div>
+      </div>
+      <p class="desc">${app.desc}</p>
+      <div class="card-footer">
+        <div>
+          <span class="badge-free">FREE</span>
+          <span class="size">${app.size}</span>
+        </div>
+        <a href="${app.link}" target="_blank" rel="noopener"><button class="dl-btn">Get ↓</button></a>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function filterApps(){
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const activeCat = document.querySelector('.chip.active').dataset.cat;
+  const filtered = apps.filter(a =>
+    (activeCat === "all" || a.cat === activeCat) &&
+    (a.name.toLowerCase().includes(q) || a.tag.toLowerCase().includes(q) || a.desc.toLowerCase().includes(q))
+  );
+  render(filtered);
+}
+
+document.querySelectorAll('.chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    chip.classList.add('active');
+    filterApps();
+  });
+});
+
+document.getElementById('searchInput').addEventListener('input', filterApps);
+
+render(apps);
+</script>
+
+</body>
+</html>
