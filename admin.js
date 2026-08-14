@@ -1,0 +1,8 @@
+document.addEventListener('DOMContentLoaded',()=>{
+const key='openshelf_apps'; const load=()=>window.OpenShelf.getApps(); const save=a=>window.OpenShelf.saveApps(a);
+const list=document.querySelector('#adminList'), count=document.querySelector('#adminCount');
+function render(){const a=load();count.textContent=a.length+' listings';list.innerHTML=a.map(x=>`<div class="admin-item"><div><b>${x.name}</b><span>${x.cat||'—'} · v${x.version||'Latest'}</span></div><button class="mini-delete" data-id="${x.id}">Remove</button></div>`).join('');document.querySelectorAll('.mini-delete').forEach(b=>b.onclick=()=>{save(load().filter(x=>x.id!==b.dataset.id));render()})}
+document.querySelector('#appForm').onsubmit=e=>{e.preventDefault();const a=load();const item={id:fId.value.trim(),name:fName.value.trim(),cat:fCat.value.trim(),tag:fTag.value.trim(),desc:fDesc.value.trim(),version:fVersion.value.trim()||'Latest',link:fLink.value.trim(),download:fDownload.value.trim()||fLink.value.trim(),source:'Community',type:'community',platform:'Multiple platforms',initial:fName.value.trim()[0]||'A',color:'#334155',updated:new Date().toISOString().slice(0,10)};save([item,...a.filter(x=>x.id!==item.id)]);e.target.reset();render();alert('Added to this browser catalog.')}
+document.querySelector('#exportBtn').onclick=()=>{const blob=new Blob([JSON.stringify(load(),null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='openshelf-apps.json';a.click();URL.revokeObjectURL(a.href)};
+render();
+});

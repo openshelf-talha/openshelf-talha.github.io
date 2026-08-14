@@ -1,18 +1,19 @@
-# OpenShelf
+# OpenShelf V3
 
-Professional static software directory for GitHub Pages.
+A major frontend rebuild of the OpenShelf project.
 
-## Structure
-- `index.html` — homepage, search, categories, featured apps
-- `app.html?id=...` — reusable app detail page
-- `submit.html` — submission form
-- `about.html` — project/trust page
-- `styles.css` — responsive design system
-- `apps.js` — app catalog and UI logic
-- `robots.txt` / `sitemap.xml` — SEO basics
+## Included
+- Premium responsive homepage
+- Search, category filters and sorting
+- App detail pages
+- Latest/previous version presentation
+- Official/source/community labels
+- Dark mode
+- Publisher submission page
+- Frontend admin preview with browser-local storage and JSON export
+- SEO-ready HTML structure
 
-### Before publishing
-1. Replace `openshelf@example.com` in `submit.html` with the real submission email.
-2. Update the domain in `robots.txt` and `sitemap.xml` if the GitHub Pages URL differs.
-3. Add real app icons/screenshots as the catalog grows.
-4. Review community download entries before featuring them.
+## Important
+`admin.html` is a frontend demo, not a secure production admin panel. For a real multi-user admin, connect the UI to a backend/database and authentication system.
+
+Only distribute files you are authorized to distribute.
