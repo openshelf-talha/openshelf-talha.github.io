@@ -4,6 +4,8 @@
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="OpenShelf — discover apps, previous versions and trusted download sources.">
 <meta name="theme-color" content="#0b1020">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>OpenShelf — Discover Apps & Versions</title>
 <link rel="stylesheet" href="styles.css?v=3.2">
 <script defer src="apps.js?v=3.2"></script><script defer src="site.js?v=3.2"></script>
@@ -13,7 +15,7 @@
 <header class="header"><div class="wrap nav">
 <a class="brand" href="index.html"><span class="brand-icon">O</span><span>Open<span>Shelf</span></span></a>
 <nav class="navlinks"><a href="#apps">Apps</a><a href="#categories">Categories</a><a href="#latest">Latest</a><a href="submit.html">Submit</a></nav>
-<div class="navright"><button class="iconbtn" id="themeBtn" aria-label="Toggle theme">☾</button><a class="btn ghost desktop" href="about.html">About</a><a class="btn primary desktop" href="#apps">Explore apps</a><button class="iconbtn mobile" id="menuBtn">☰</button></div>
+<div class="navright"><button class="iconbtn" id="themeBtn" aria-label="Toggle theme">☾</button><a class="btn ghost desktop" href="about.html">About</a><a class="btn primary desktop" href="#apps">Explore apps</a><button class="btn ghost install-btn" id="installBtn" type="button" hidden>Install app</button><button class="iconbtn mobile" id="menuBtn">☰</button></div>
 </div></header>
 
 <section class="hero">

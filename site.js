@@ -39,6 +39,14 @@ applyTheme(saved);
 if(b)b.onclick=()=>{const dark=!root.classList.contains('dark-mode'); const mode=dark?'dark':'light'; applyTheme(mode); try{localStorage.setItem('openshelf_theme',mode)}catch(e){}};
 if(m)m.onclick=()=>{const nav=$('.navlinks'); if(nav){nav.classList.toggle('open');m.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false')}};
 }
-document.addEventListener('DOMContentLoaded',()=>{initTheme();initHome();initDetail()});
+let deferredInstallPrompt=null;
+function initPWA(){
+  const installBtn=document.querySelector('#installBtn');
+  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;if(installBtn)installBtn.hidden=false;});
+  if(installBtn){installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;installBtn.hidden=true;});}
+  window.addEventListener('appinstalled',()=>{if(installBtn)installBtn.hidden=true;});
+  if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+}
+document.addEventListener('DOMContentLoaded',()=>{initPWA();initTheme();initHome();initDetail()});
 window.OpenShelf={getApps,saveApps};
 })();
