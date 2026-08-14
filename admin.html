@@ -1,31 +1,56 @@
 <!doctype html>
-<html lang="en"><head>
+<html lang="en">
+<head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b1020"><title>Admin Studio — OpenShelf</title>
-<link rel="stylesheet" href="styles.css?v=3.3"><script defer src="apps.js?v=3.3"></script><script defer src="admin.js?v=3.3"></script>
-</head><body class="admin-body">
-<div id="loginGate" class="login-gate"><div class="login-card"><div class="brand"><span class="brand-icon">O</span><span>Open<span>Shelf</span></span></div><div class="kicker">Private area</div><h1>Admin Studio</h1><p>Manage your app catalog from one clean dashboard.</p><form id="loginForm"><label>Admin PIN<input id="adminPin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter PIN" required></label><button class="btn primary big" type="submit">Sign in →</button><small>Demo access on this static build: <b>1234</b>. This is not a secure production login; connect a backend before public use.</small></form></div></div>
-<div id="adminApp" class="admin-shell" hidden>
-<header class="admin-top"><div class="wrap admin-nav"><a class="brand" href="index.html"><span class="brand-icon">O</span><span>Open<span>Shelf</span></span></a><div class="admin-navlinks"><a href="index.html">View site</a><button id="themeBtn" class="iconbtn">☾</button><button id="logoutBtn" class="btn ghost">Logout</button></div></div></header>
-<main class="detail-page"><div class="wrap">
-<div class="admin-head"><div><div class="kicker">OpenShelf control center</div><h1 class="page-title">Admin Studio</h1><p class="lead">Add apps, manage versions and keep every source clearly labeled.</p></div><div class="admin-head-actions"><button class="btn ghost" id="importBtn">Import JSON</button><input id="importFile" type="file" accept="application/json" hidden><button class="btn primary" id="exportBtn">Export JSON</button></div></div>
-<div class="admin-stats"><div><span>Total apps</span><b id="statApps">0</b></div><div><span>Featured</span><b id="statFeatured">0</b></div><div><span>Categories</span><b id="statCats">0</b></div><div><span>Versions</span><b id="statVersions">0</b></div></div>
-<div class="admin-layout">
-<section class="admin-editor panel"><div class="panel-head"><div><b id="editorTitle">Add new app</b><span>App listing editor</span></div><button class="mini-btn" id="resetBtn" type="button">Clear</button></div>
-<form id="appForm" class="admin-form">
-<input id="fEditId" type="hidden">
-<div class="form-row"><label>App name<input id="fName" required placeholder="WhatsApp"></label><label>App ID / slug<input id="fId" required placeholder="whatsapp"></label></div>
-<div class="form-row"><label>Category<select id="fCat"><option>productivity</option><option>media</option><option>utility</option><option>dev</option><option>office</option><option>communication</option><option>games</option></select></label><label>Tagline<input id="fTag" placeholder="Messaging app"></label></div>
-<label>Description<textarea id="fDesc" placeholder="Short, useful description…"></textarea></label>
-<div class="form-row"><label>Latest version<input id="fVersion" placeholder="1.0.0"></label><label>File size<input id="fSize" placeholder="120 MB / APK"></label></div>
-<div class="form-row"><label>Platform<input id="fPlatform" placeholder="Android · Windows"></label><label>Source type<select id="fType"><option value="official">Official</option><option value="free">Free</option><option value="open">Open source</option><option value="community">Authorized community</option></select></label></div>
-<div class="form-row"><label>Official/source URL<input id="fLink" type="url" placeholder="https://..."></label><label>Latest download URL<input id="fDownload" type="url" placeholder="https://..."></label></div>
-<div class="form-row"><label>Icon letter<input id="fInitial" maxlength="3" placeholder="A"></label><label>Icon background<input id="fColor" type="text" value="#315efb" placeholder="#315efb"></label></div>
-<label class="checkline"><input id="fFeatured" type="checkbox"><span>Show as featured</span></label>
-<div class="version-editor"><div class="subhead"><b>Version history</b><button type="button" class="mini-btn" id="addVersionBtn">+ Add version</button></div><div id="versionRows"></div></div>
-<div class="form-actions"><button type="submit" class="btn primary big" id="saveBtn">Publish app →</button><button type="button" class="btn ghost big" id="deleteBtn" disabled>Delete</button></div>
-<p class="small warning-text">Static GitHub Pages note: this Studio stores changes in the current browser. Export the catalog and connect a real database/authentication system for shared production publishing.</p>
-</form></section>
-<section class="panel catalog-panel"><div class="panel-head"><div><b>App catalog</b><span id="adminCount">0 listings</span></div><input id="adminSearch" class="admin-search" placeholder="Search catalog…"></div><div id="adminList"></div></section>
-</div></div></main>
-</div></body></html>
+<title>OpenShelf Admin Studio</title>
+<link rel="stylesheet" href="styles.css?v=3.4">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script defer src="apps.js?v=3.4"></script>
+<script defer src="admin.js?v=3.4"></script>
+<style>
+.admin-wrap{max-width:1100px;margin:auto;padding:24px 16px 70px}.admin-top{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-bottom:20px}.admin-top h1{margin:4px 0}.admin-actions{display:flex;gap:8px;flex-wrap:wrap}.admin-card{background:var(--card,#fff);border:1px solid rgba(100,116,139,.18);border-radius:22px;padding:20px;box-shadow:0 12px 40px rgba(15,23,42,.06);margin-bottom:18px}.admin-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:18px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}.form-grid .full{grid-column:1/-1}.field label{display:block;font-weight:800;margin-bottom:7px}.field input,.field textarea,.field select{width:100%;box-sizing:border-box;border:1px solid #d7dce5;border-radius:14px;padding:13px 14px;font:inherit;background:#fff}.field textarea{min-height:110px;resize:vertical}.upload-box{border:2px dashed #b8c2d4;border-radius:18px;padding:18px;text-align:center;background:#f8fafc}.upload-box input{width:100%}.preview{display:flex;gap:14px;align-items:center;margin-top:12px}.preview img{width:72px;height:72px;border-radius:18px;object-fit:cover;border:1px solid #ddd}.file-meta{font-size:13px;color:#64748b}.version-row{display:grid;grid-template-columns:.7fr 1.4fr 1fr auto;gap:8px;margin:8px 0}.version-row input{min-width:0}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.stat{padding:14px;border-radius:16px;background:#f1f5f9}.stat b{font-size:24px;display:block}.app-row{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid #e5e7eb}.app-row:last-child{border-bottom:0}.app-main{display:flex;gap:10px;align-items:center}.mini-icon{width:44px;height:44px;border-radius:12px;display:grid;place-items:center;color:#fff;font-weight:900}.muted{color:#64748b}.notice{padding:12px 14px;border-radius:14px;background:#eff6ff;color:#1e40af;margin-top:12px}.danger{color:#b91c1c}.hidden{display:none!important}.modal{position:fixed;inset:0;background:rgba(2,6,23,.55);display:grid;place-items:center;padding:18px;z-index:20}.modal-box{max-width:620px;width:100%;background:#fff;border-radius:22px;padding:20px}.progress{height:8px;background:#e2e8f0;border-radius:99px;overflow:hidden;margin-top:10px}.progress>i{display:block;height:100%;width:0;background:#315efb}.pill{display:inline-block;padding:4px 8px;border-radius:999px;background:#e8eefc;color:#315efb;font-size:12px;font-weight:800}.theme-dark .admin-card,.dark .admin-card{background:#0f172a;color:#e5e7eb}.dark .field input,.dark .field textarea,.dark .field select,.dark .upload-box,.dark .modal-box{background:#111827;color:#e5e7eb;border-color:#334155}.dark .stat{background:#1e293b}.dark .app-row{border-color:#334155}
+@media(max-width:800px){.admin-grid{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,1fr)}.version-row{grid-template-columns:1fr}.admin-top{align-items:flex-start;flex-direction:column}}
+</style>
+</head>
+<body>
+<header class="header"><div class="wrap nav"><a class="brand" href="index.html"><span class="brand-icon">O</span><span>Open<span>Shelf</span></span></a><div class="admin-actions"><a class="btn ghost" href="index.html">View site</a><button class="btn ghost" id="themeBtn" type="button">☾</button></div></div></header>
+<main class="admin-wrap">
+<section id="loginGate" class="admin-card">
+  <div class="kicker">Secure content manager</div><h1>OpenShelf Admin Studio</h1><p class="lead">Sign in to manage apps. The local demo PIN is available until Supabase Auth is connected.</p>
+  <div class="form-grid"><div class="field"><label>Demo PIN</label><input id="adminPin" inputmode="numeric" type="password" placeholder="1234"></div><div style="display:flex;align-items:end"><button class="btn primary big" id="pinLogin" type="button">Enter Admin →</button></div></div>
+  <div class="notice">For real public uploads, connect Supabase in <b>Storage & Database</b> below and use a Supabase Auth account. Do not put a private service-role key in this website.</div>
+</section>
+<section id="adminApp" class="hidden">
+<div class="admin-top"><div><div class="kicker">Content manager</div><h1>Publish an app</h1><p class="muted">Upload an APK, icon and version links from your phone.</p></div><div class="admin-actions"><button class="btn ghost" id="configBtn" type="button">Storage & Database</button><button class="btn ghost" id="logoutBtn" type="button">Logout</button></div></div>
+<div class="stats"><div class="stat"><span>Apps</span><b id="statApps">0</b></div><div class="stat"><span>Featured</span><b id="statFeatured">0</b></div><div class="stat"><span>Categories</span><b id="statCats">0</b></div><div class="stat"><span>Versions</span><b id="statVersions">0</b></div></div>
+<div class="admin-grid" style="margin-top:18px">
+<form class="admin-card" id="appForm">
+<h2 id="editorTitle">Add new app</h2>
+<div class="form-grid">
+<div class="field"><label>App name</label><input id="fName" required placeholder="WPS Office"></div>
+<div class="field"><label>App ID</label><input id="fId" required placeholder="wps-office"></div>
+<div class="field"><label>Category</label><select id="fCat"><option>productivity</option><option>video</option><option>messaging</option><option>utility</option><option>browser</option><option>education</option><option>games</option></select></div>
+<div class="field"><label>Tagline</label><input id="fTag" placeholder="Office suite for work and study"></div>
+<div class="field full"><label>Description</label><textarea id="fDesc" placeholder="Short, useful description..."></textarea></div>
+<div class="field"><label>Latest version</label><input id="fVersion" placeholder="1.0.0"></div>
+<div class="field"><label>File size</label><input id="fSize" placeholder="120 MB / APK"></div>
+<div class="field"><label>Platform</label><input id="fPlatform" placeholder="Android"></div>
+<div class="field"><label>Source type</label><select id="fType"><option value="official">Official</option><option value="opensource">Open source</option><option value="authorized">Authorized community</option><option value="community">Community</option></select></div>
+<div class="field"><label>Official/source URL</label><input id="fLink" type="url" placeholder="https://..."></div>
+<div class="field"><label>Icon letter</label><input id="fInitial" maxlength="2" placeholder="W"></div>
+<div class="field"><label>Icon background</label><input id="fColor" value="#315efb" placeholder="#315efb"></div>
+<div class="field full"><label>APK / installer upload</label><div class="upload-box"><input id="apkFile" type="file" accept=".apk,.xapk,.apks,.exe,.msi,.zip"><div id="fileMeta" class="file-meta">Choose an app file from your phone. Max size depends on your storage provider.</div><div class="progress"><i id="uploadProgress"></i></div></div></div>
+<div class="field full"><label>Latest download URL <span class="pill">auto after upload</span></label><input id="fDownload" type="url" placeholder="https://..."></div>
+<div class="field full"><label><input id="fFeatured" type="checkbox" style="width:auto"> Featured app</label></div>
+</div>
+<div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px"><button class="btn primary big" type="submit" id="saveBtn">Publish app →</button><button class="btn ghost" type="button" id="resetBtn">Reset</button><button class="btn ghost" type="button" id="deleteBtn" disabled>Delete</button></div>
+<p id="saveStatus" class="muted" style="margin-top:12px"></p>
+</form>
+<div>
+<div class="admin-card"><h2>Previous versions</h2><div id="versionRows"></div><button class="btn ghost" type="button" id="addVersionBtn">+ Add version</button><p class="muted">Each version can have its own download URL.</p></div>
+<div class="admin-card"><div style="display:flex;justify-content:space-between;gap:8px;align-items:center"><h2>Current catalog</h2><button class="btn ghost" id="exportBtn" type="button">Export JSON</button></div><input id="adminSearch" placeholder="Search apps..." style="width:100%;box-sizing:border-box;padding:12px;border-radius:12px;border:1px solid #d7dce5;margin:10px 0"><div id="adminList"></div></div>
+</div></div>
+</section>
+</main>
+<div id="configModal" class="modal hidden"><div class="modal-box"><h2>Storage & Database</h2><p class="muted">Paste your Supabase project URL and anon key. These two values are designed for browser use. Never paste a service-role key here.</p><div class="field"><label>Supabase Project URL</label><input id="sbUrl" placeholder="https://xxxxx.supabase.co"></div><div class="field" style="margin-top:10px"><label>Supabase anon/publishable key</label><input id="sbKey" placeholder="eyJ..."></div><div class="field" style="margin-top:10px"><label>Storage bucket</label><input id="sbBucket" value="app-files"></div><div style="display:flex;gap:8px;margin-top:14px"><button class="btn primary" id="saveConfig" type="button">Save & Connect</button><button class="btn ghost" id="closeConfig" type="button">Close</button></div><div id="configStatus" class="notice" style="margin-top:12px"></div></div></div>
+</body></html>
