@@ -78,3 +78,58 @@
   .detail-actions .btn{min-width:100%;width:100%}
   .facts{grid-template-columns:1fr}
 }
+
+
+/* OpenShelf V3.2 — final responsive + theme hardening */
+html{overflow-x:hidden}
+body{min-width:0;overflow-x:hidden}
+.wrap{width:min(1180px,calc(100% - 32px));margin-inline:auto}
+img,svg,video{max-width:100%;height:auto}
+button,input,select,textarea{max-width:100%}
+.dark-mode{--bg:#070b14;--surface:#0f1726;--text:#f3f6fb;--muted:#a7b2c5;--line:#263246;--brand:#6d8cff}
+.dark-mode body{background:var(--bg);color:var(--text)}
+.dark-mode .header{background:rgba(15,23,38,.94);border-color:var(--line)}
+.dark-mode .navlinks a{color:#d0d7e4}
+.dark-mode .btn,.dark-mode .iconbtn,.dark-mode .filter,.dark-mode .sortwrap select,.dark-mode .category-card,.dark-mode .app-card,.dark-mode .feature-card,.dark-mode .detail-card,.dark-mode .side-card,.dark-mode .form-card,.dark-mode .panel,.dark-mode .info-card{background:var(--surface);color:var(--text);border-color:var(--line)}
+.dark-mode .category-card small,.dark-mode .app-card p,.dark-mode .section-head p,.dark-mode .lead,.dark-mode .muted,.dark-mode .card-title span,.dark-mode .feature-card p{color:var(--muted)}
+.dark-mode .hero-search{background:#fff}
+.dark-mode .hero-search input{background:#fff;color:#101828}
+.dark-mode .trust-panel{background:#111a2b;border-color:#263246}
+.dark-mode .trust-list div{background:#0f1726;border-color:#263246}
+@media(max-width:760px){
+  .wrap{width:calc(100% - 32px);margin-inline:auto}
+  .nav{gap:8px}
+  .brand{flex:1;min-width:0;overflow:hidden}
+  .brand>span:last-child{overflow:hidden;text-overflow:ellipsis}
+  .navright{flex:0 0 auto}
+  .navlinks{left:0!important;right:0!important;width:100%!important}
+  .navlinks.open{display:flex!important}
+  .hero{overflow:hidden}
+  .hero-copy{overflow:hidden}
+  .hero h1{max-width:100%;overflow-wrap:anywhere;word-break:normal}
+  .hero-copy>p{max-width:100%;overflow-wrap:anywhere}
+  .hero-search{max-width:100%;overflow:hidden}
+  .hero-search input{min-width:0;width:0;flex:1 1 auto}
+  .hero-search button{flex:0 0 auto;white-space:nowrap}
+  .quick{max-width:100%}
+  .feature-card,.category-card,.app-card,.detail-card,.side-card,.form-card,.panel{min-width:0}
+}
+@media(max-width:430px){
+  .wrap{width:calc(100% - 24px)}
+  .header{height:62px}
+  .navlinks{top:62px!important}
+  .hero-grid{padding-top:38px}
+  .hero h1{font-size:clamp(34px,10.5vw,43px);letter-spacing:-1.6px}
+  .hero-search{padding:4px}
+  .hero-search input{font-size:13px;padding:9px 7px}
+  .hero-search button{height:38px;padding:0 12px}
+  .category-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:360px){
+  .wrap{width:calc(100% - 20px)}
+  .brand{font-size:16px}
+  .brand-icon{width:30px;height:30px;flex-basis:30px}
+  #themeBtn,#menuBtn{width:34px;height:34px;flex-basis:34px}
+  .hero h1{font-size:32px}
+  .category-grid{grid-template-columns:1fr}
+}

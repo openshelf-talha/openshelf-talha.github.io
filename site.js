@@ -31,7 +31,14 @@ box.innerHTML=`<a class="back" href="index.html#apps">← Back to apps</a><secti
 <div class="detail-card"><div class="card-heading"><h2>Previous versions</h2><span>${(a.versions||[]).length} releases</span></div><div class="versions">${versions||'<div class="empty">No previous versions have been added yet.</div>'}</div></div></div>
 <aside><div class="side-card"><h3>Download information</h3><div class="side-row"><span>Release type</span><b>${esc(a.type||'standard')}</b></div><div class="side-row"><span>Updated</span><b>${esc(a.updated||'—')}</b></div><div class="side-row"><span>Source</span><b>${esc(a.source||'—')}</b></div><div class="notice">${a.community?'Community release: verify the source and authorization before installing.':'Source is clearly labeled on this listing.'}</div></div></aside></div>`;
 }
-function initTheme(){const b=$('#themeBtn'); if(!b)return; const saved=localStorage.getItem('openshelf_theme'); if(saved==='dark')document.body.classList.add('dark'); b.textContent=document.body.classList.contains('dark')?'☀':'☾'; b.onclick=()=>{document.body.classList.toggle('dark');localStorage.setItem('openshelf_theme',document.body.classList.contains('dark')?'dark':'light');b.textContent=document.body.classList.contains('dark')?'☀':'☾'}; const m=$('#menuBtn'); if(m)m.onclick=()=>$('.navlinks')?.classList.toggle('open')}
+function initTheme(){
+const b=$('#themeBtn'); const m=$('#menuBtn'); const root=document.documentElement;
+let saved='light'; try{saved=localStorage.getItem('openshelf_theme')||'light'}catch(e){}
+const applyTheme=mode=>{const dark=mode==='dark'; root.classList.toggle('dark-mode',dark); document.body.classList.toggle('dark',dark); if(b){b.textContent=dark?'☀':'☾';b.setAttribute('aria-label',dark?'Switch to light mode':'Switch to dark mode');b.setAttribute('title',dark?'Light mode':'Dark mode')}};
+applyTheme(saved);
+if(b)b.onclick=()=>{const dark=!root.classList.contains('dark-mode'); const mode=dark?'dark':'light'; applyTheme(mode); try{localStorage.setItem('openshelf_theme',mode)}catch(e){}};
+if(m)m.onclick=()=>{const nav=$('.navlinks'); if(nav){nav.classList.toggle('open');m.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false')}};
+}
 document.addEventListener('DOMContentLoaded',()=>{initTheme();initHome();initDetail()});
 window.OpenShelf={getApps,saveApps};
 })();
