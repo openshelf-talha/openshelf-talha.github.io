@@ -1,5 +1,31 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>OpenShelf Admin Preview</title><link rel="stylesheet" href="styles.css?v=3.2"><script defer src="apps.js?v=3.2"></script><script defer src="admin.js?v=3.2"></script></head><body>
-<header class="header"><div class="wrap nav"><a class="brand" href="index.html"><span class="brand-icon">O</span><span>Open<span>Shelf</span></span></a><a class="btn ghost" href="index.html">View site</a></div></header>
-<main class="detail-page"><div class="wrap"><div class="admin-head"><div><div class="kicker">Content manager</div><h1 class="page-title">App manager</h1><p class="lead">Frontend preview for the future database-backed admin panel.</p></div><button class="btn primary" id="exportBtn">Export JSON</button></div>
-<div class="admin-grid"><form class="form-card" id="appForm"><h3>Add / edit listing</h3><label>Name<input id="fName" required></label><label>ID<input id="fId" required placeholder="my-app"></label><label>Category<input id="fCat" required></label><label>Tagline<input id="fTag"></label><label>Description<textarea id="fDesc"></textarea></label><label>Latest version<input id="fVersion" placeholder="1.0.0"></label><label>Official/source URL<input id="fLink" type="url"></label><label>Download URL<input id="fDownload" type="url"></label><button class="btn primary big">Add to browser catalog</button><p class="small">This demo stores changes in your browser only. A real shared admin requires a backend/database.</p></form>
-<div><div class="panel"><div class="panel-head"><b>Current catalog</b><span id="adminCount"></span></div><div id="adminList"></div></div></div></div></div></main></body></html>
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020"><title>Admin Studio — OpenShelf</title>
+<link rel="stylesheet" href="styles.css?v=3.3"><script defer src="apps.js?v=3.3"></script><script defer src="admin.js?v=3.3"></script>
+</head><body class="admin-body">
+<div id="loginGate" class="login-gate"><div class="login-card"><div class="brand"><span class="brand-icon">O</span><span>Open<span>Shelf</span></span></div><div class="kicker">Private area</div><h1>Admin Studio</h1><p>Manage your app catalog from one clean dashboard.</p><form id="loginForm"><label>Admin PIN<input id="adminPin" type="password" inputmode="numeric" autocomplete="current-password" placeholder="Enter PIN" required></label><button class="btn primary big" type="submit">Sign in →</button><small>Demo access on this static build: <b>1234</b>. This is not a secure production login; connect a backend before public use.</small></form></div></div>
+<div id="adminApp" class="admin-shell" hidden>
+<header class="admin-top"><div class="wrap admin-nav"><a class="brand" href="index.html"><span class="brand-icon">O</span><span>Open<span>Shelf</span></span></a><div class="admin-navlinks"><a href="index.html">View site</a><button id="themeBtn" class="iconbtn">☾</button><button id="logoutBtn" class="btn ghost">Logout</button></div></div></header>
+<main class="detail-page"><div class="wrap">
+<div class="admin-head"><div><div class="kicker">OpenShelf control center</div><h1 class="page-title">Admin Studio</h1><p class="lead">Add apps, manage versions and keep every source clearly labeled.</p></div><div class="admin-head-actions"><button class="btn ghost" id="importBtn">Import JSON</button><input id="importFile" type="file" accept="application/json" hidden><button class="btn primary" id="exportBtn">Export JSON</button></div></div>
+<div class="admin-stats"><div><span>Total apps</span><b id="statApps">0</b></div><div><span>Featured</span><b id="statFeatured">0</b></div><div><span>Categories</span><b id="statCats">0</b></div><div><span>Versions</span><b id="statVersions">0</b></div></div>
+<div class="admin-layout">
+<section class="admin-editor panel"><div class="panel-head"><div><b id="editorTitle">Add new app</b><span>App listing editor</span></div><button class="mini-btn" id="resetBtn" type="button">Clear</button></div>
+<form id="appForm" class="admin-form">
+<input id="fEditId" type="hidden">
+<div class="form-row"><label>App name<input id="fName" required placeholder="WhatsApp"></label><label>App ID / slug<input id="fId" required placeholder="whatsapp"></label></div>
+<div class="form-row"><label>Category<select id="fCat"><option>productivity</option><option>media</option><option>utility</option><option>dev</option><option>office</option><option>communication</option><option>games</option></select></label><label>Tagline<input id="fTag" placeholder="Messaging app"></label></div>
+<label>Description<textarea id="fDesc" placeholder="Short, useful description…"></textarea></label>
+<div class="form-row"><label>Latest version<input id="fVersion" placeholder="1.0.0"></label><label>File size<input id="fSize" placeholder="120 MB / APK"></label></div>
+<div class="form-row"><label>Platform<input id="fPlatform" placeholder="Android · Windows"></label><label>Source type<select id="fType"><option value="official">Official</option><option value="free">Free</option><option value="open">Open source</option><option value="community">Authorized community</option></select></label></div>
+<div class="form-row"><label>Official/source URL<input id="fLink" type="url" placeholder="https://..."></label><label>Latest download URL<input id="fDownload" type="url" placeholder="https://..."></label></div>
+<div class="form-row"><label>Icon letter<input id="fInitial" maxlength="3" placeholder="A"></label><label>Icon background<input id="fColor" type="text" value="#315efb" placeholder="#315efb"></label></div>
+<label class="checkline"><input id="fFeatured" type="checkbox"><span>Show as featured</span></label>
+<div class="version-editor"><div class="subhead"><b>Version history</b><button type="button" class="mini-btn" id="addVersionBtn">+ Add version</button></div><div id="versionRows"></div></div>
+<div class="form-actions"><button type="submit" class="btn primary big" id="saveBtn">Publish app →</button><button type="button" class="btn ghost big" id="deleteBtn" disabled>Delete</button></div>
+<p class="small warning-text">Static GitHub Pages note: this Studio stores changes in the current browser. Export the catalog and connect a real database/authentication system for shared production publishing.</p>
+</form></section>
+<section class="panel catalog-panel"><div class="panel-head"><div><b>App catalog</b><span id="adminCount">0 listings</span></div><input id="adminSearch" class="admin-search" placeholder="Search catalog…"></div><div id="adminList"></div></section>
+</div></div></main>
+</div></body></html>
