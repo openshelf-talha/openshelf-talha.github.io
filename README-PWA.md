@@ -1,4 +1,4 @@
-# OpenShelf PWA v4
+# OpenShelf PWA v5
 
 This build adds an installable Progressive Web App layer without changing the core OpenShelf catalog UI.
 

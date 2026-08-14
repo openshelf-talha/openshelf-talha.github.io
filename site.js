@@ -42,10 +42,31 @@ if(m)m.onclick=()=>{const nav=$('.navlinks'); if(nav){nav.classList.toggle('open
 let deferredInstallPrompt=null;
 function initPWA(){
   const installBtn=document.querySelector('#installBtn');
-  window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstallPrompt=e;if(installBtn)installBtn.hidden=false;});
-  if(installBtn){installBtn.addEventListener('click',async()=>{if(!deferredInstallPrompt)return;deferredInstallPrompt.prompt();await deferredInstallPrompt.userChoice;deferredInstallPrompt=null;installBtn.hidden=true;});}
-  window.addEventListener('appinstalled',()=>{if(installBtn)installBtn.hidden=true;});
-  if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js').catch(()=>{}));
+  if(!installBtn)return;
+  const showInstall=()=>{installBtn.hidden=false;installBtn.style.display='inline-flex';};
+  const hideInstall=()=>{installBtn.hidden=true;installBtn.style.display='none';};
+  hideInstall();
+  window.addEventListener('beforeinstallprompt',e=>{
+    e.preventDefault();
+    deferredInstallPrompt=e;
+    showInstall();
+  });
+  installBtn.addEventListener('click',async()=>{
+    if(deferredInstallPrompt){
+      const promptEvent=deferredInstallPrompt;
+      deferredInstallPrompt=null;
+      try{
+        await promptEvent.prompt();
+        await promptEvent.userChoice;
+      }catch(err){
+        console.warn('Install prompt failed',err);
+      }
+      return;
+    }
+    alert('Chrome menu (⋮) → Add to Home screen / Install app. If the option is missing, refresh the page once and try again.');
+  });
+  window.addEventListener('appinstalled',()=>{hideInstall();deferredInstallPrompt=null;});
+  if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=5').catch(()=>{}));
 }
 document.addEventListener('DOMContentLoaded',()=>{initPWA();initTheme();initHome();initDetail()});
 window.OpenShelf={getApps,saveApps};
