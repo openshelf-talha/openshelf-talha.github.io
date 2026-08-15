@@ -39,35 +39,6 @@ applyTheme(saved);
 if(b)b.onclick=()=>{const dark=!root.classList.contains('dark-mode'); const mode=dark?'dark':'light'; applyTheme(mode); try{localStorage.setItem('openshelf_theme',mode)}catch(e){}};
 if(m)m.onclick=()=>{const nav=$('.navlinks'); if(nav){nav.classList.toggle('open');m.setAttribute('aria-expanded',nav.classList.contains('open')?'true':'false')}};
 }
-let deferredInstallPrompt=null;
-function initPWA(){
-  const installBtn=document.querySelector('#installBtn');
-  if(!installBtn)return;
-  const showInstall=()=>{installBtn.hidden=false;installBtn.style.display='inline-flex';};
-  const hideInstall=()=>{installBtn.hidden=true;installBtn.style.display='none';};
-  hideInstall();
-  window.addEventListener('beforeinstallprompt',e=>{
-    e.preventDefault();
-    deferredInstallPrompt=e;
-    showInstall();
-  });
-  installBtn.addEventListener('click',async()=>{
-    if(deferredInstallPrompt){
-      const promptEvent=deferredInstallPrompt;
-      deferredInstallPrompt=null;
-      try{
-        await promptEvent.prompt();
-        await promptEvent.userChoice;
-      }catch(err){
-        console.warn('Install prompt failed',err);
-      }
-      return;
-    }
-    alert('Chrome menu (⋮) → Add to Home screen / Install app. If the option is missing, refresh the page once and try again.');
-  });
-  window.addEventListener('appinstalled',()=>{hideInstall();deferredInstallPrompt=null;});
-  if('serviceWorker' in navigator) window.addEventListener('load',()=>navigator.serviceWorker.register('./sw.js?v=5').catch(()=>{}));
-}
-document.addEventListener('DOMContentLoaded',()=>{initPWA();initTheme();initHome();initDetail()});
+document.addEventListener('DOMContentLoaded',()=>{initTheme();initHome();initDetail()});
 window.OpenShelf={getApps,saveApps};
 })();
