@@ -41,4 +41,21 @@ if(m)m.onclick=()=>{const nav=$('.navlinks'); if(nav){nav.classList.toggle('open
 }
 document.addEventListener('DOMContentLoaded',()=>{initTheme();initHome();initDetail()});
 window.OpenShelf={getApps,saveApps};
+let deferredInstallPrompt=null;
+window.addEventListener('beforeinstallprompt',(e)=>{
+  e.preventDefault();
+  deferredInstallPrompt=e;
+  document.querySelectorAll('#installBtn').forEach(b=>b.hidden=false);
+});
+document.addEventListener('click',async(e)=>{
+  if(e.target && e.target.id==='installBtn' && deferredInstallPrompt){
+    deferredInstallPrompt.prompt();
+    await deferredInstallPrompt.userChoice;
+    deferredInstallPrompt=null;
+    document.querySelectorAll('#installBtn').forEach(b=>b.hidden=true);
+  }
+});
+window.addEventListener('appinstalled',()=>{
+  document.querySelectorAll('#installBtn').forEach(b=>b.hidden=true);
+});
 })();
